@@ -13,6 +13,10 @@ const Main = () => {
         socket.emit('message', 'hello server', () => {
             console.log('server is done!!!');
         });
+
+        return () => {
+            socket.emit('disconnection');
+        };
     }, []);
 
     return (

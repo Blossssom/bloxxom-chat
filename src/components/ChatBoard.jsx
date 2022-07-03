@@ -8,6 +8,7 @@ const ChatBoard = ({socket, roomName}) => {
     useEffect(() => {
         console.log(chat);
         socket.on('send_message', (msg) => setChat([...chat, msg]));
+        console.log(chat);
     }, [chat])
 
     const handleMessageChange = (e) => {
@@ -15,9 +16,11 @@ const ChatBoard = ({socket, roomName}) => {
     };
 
     const handleSendMessage = () => {
-        socket.emit('new_message', message, roomName, () => {
-            setChat([...chat, message]);
-        });
+        if(message) {
+            socket.emit('new_message', message, roomName, () => {
+                setChat([...chat, `You : ${message}`]);
+            });
+        }
     };
     
     return (
@@ -28,10 +31,9 @@ const ChatBoard = ({socket, roomName}) => {
                     <ul className="chat-ul">
                         {
                             chat.length !== 0
-                                ? chat.map(chatting => {
+                                && chat.map(chatting => {
                                     return <li key={chat.indexOf(chatting)}>{chatting}</li>
                                 })
-                                : null
                         }
                     </ul>
                 </div>

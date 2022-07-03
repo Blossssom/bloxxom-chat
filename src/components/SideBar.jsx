@@ -5,6 +5,7 @@ const SideBar = ({socket, setRoom}) => {
     const [roomName, setRoomName] = useState('');
     const [nickName, setNickName] = useState('');
     const [roomList, setRoomList] = useState([]);
+    console.log(roomList);
 
     useEffect(() => {
         socket.on('roomLists', (rooms) => {

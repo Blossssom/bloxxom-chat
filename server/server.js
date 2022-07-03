@@ -28,8 +28,10 @@ const getPublicRoom = () => {
 };
 
 socketServer.on('connection', (socket) => {
+    socket['nickname'] = 'Anonymous';
+
     socket.onAny((e) => {
-        console.log(socketServer.sockets.adapter);
+        console.log(`Socket Event : ${e}`);
     });
 
     socket.on('message', (msg, done) => {
@@ -52,7 +54,7 @@ socketServer.on('connection', (socket) => {
     });
 
     socket.on('new_message', (msg, room, done) => {
-        socket.to(room).emit('send_message', msg);
+        socket.to(room).emit('send_message', `${socket.nickname} : ${msg}`);
         done();
     });
 });
