@@ -1,15 +1,12 @@
 import { useEffect, useState } from "react";
 import './SideBar.css';
 
-const SideBar = ({socket, setRoom}) => {
+const SideBar = ({socket, setRoom, contacts, allUsers}) => {
     const [roomName, setRoomName] = useState('');
-    const [nickName, setNickName] = useState('');
     const [roomList, setRoomList] = useState([]);
-    console.log(roomList);
 
     useEffect(() => {
         socket.on('roomLists', (rooms) => {
-            console.log(rooms);
             setRoomList(rooms);
         });
     }, [roomList]);
@@ -18,9 +15,6 @@ const SideBar = ({socket, setRoom}) => {
         setRoomName(e.target.value);
     };
 
-    const handleNickNameChange = (e) => {
-        setNickName(e.target.value);
-    };
 
     const handleCreateRoom = () => {
         socket.emit('join_room', roomName, (msg) => {
@@ -42,28 +36,30 @@ const SideBar = ({socket, setRoom}) => {
         // socket.emit('join_room', )
     };
 
-    const handleSaveNickName = () => {
-        socket.emit('set_nickname', nickName);
+    const handleSelectChatUser = (user) => {
+        contacts(user);
     };
+
     
     return (
         <>
             <section className="side-bar">
                 <div>
-                    <input onChange={handleNickNameChange} value={nickName} type="text" placeholder="input nickname" />
-                    <button onClick={handleSaveNickName}>Save</button>
-                </div>
-                <div>
                     <input onChange={handleRoomNameChange} value={roomName} type="text" placeholder="input room name..." />
                     <button onClick={handleCreateRoom}>Join</button>
                 </div>
+                <div className="side-bar__userlist">
                 {
-                    roomList.map(room => {
-                        return <div key={room.id}>
-                                    <button onClick={handleJoinRoom} value={room.name}>{room.name}</button>
-                                </div>
+                    allUsers.map((users, idx) => {
+                        return (
+                                <button key={idx} onClick={() => handleSelectChatUser(users)}>
+                                    <h3>{users.username}</h3>
+                                    <span>{users.nickname}</span>
+                                </button>
+                        )
                     })
                 }
+                </div>
             </section>
         </>
     )

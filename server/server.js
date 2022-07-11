@@ -1,10 +1,15 @@
 const express = require('express');
 const http = require('http');
 const {Server} = require('socket.io');
-
+const mongoose = require('mongoose');
+const cors = require('cors');
+const serverRouter = require('./router/serverRouter');
 const app = express();
-const port = 3012;
+require('dotenv').config({path: "./server/.env"});
 
+app.use(cors());
+app.use(express.json());
+app.use('/api/auth', serverRouter);
 app.get('/', (req, res) => res.send('connect httpServer').status(200));
 
 const httpServer = http.createServer(app);
@@ -15,10 +20,20 @@ const socketServer = new Server(httpServer, {
     }
 });
 
+
+mongoose.connect(process.env.MONGO_URL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+}).then(() => {
+    console.log('DB connect!!!');
+}).catch((err) => {
+    console.log(err.message);
+});
+// DB 연결 문자열 파싱허용, 통합 토폴로지 사용
+
 const getPublicRoom = () => {
     const {sids, rooms} = socketServer.sockets.adapter;
     const publicRooms = [];
-    console.log(rooms);
     rooms.forEach((v, key) => {
         if(sids.get(key) === undefined) {
             publicRooms.push({id: [...v][0], name: key});
@@ -59,8 +74,8 @@ socketServer.on('connection', (socket) => {
     });
 });
 
-httpServer.listen(port, () => {
-    console.log('server on!!!');
+httpServer.listen(process.env.PORT, () => {
+    console.log(`server on!!! on ${process.env.PORT}`);
 });
 
 
