@@ -10,20 +10,26 @@ import { allUserRoute, addChatLog, getChatLog } from "../utils/ApiRouter";
 
 const socket = io.connect('http://localhost:3012/');
 const Main = () => {
-    const [thisRoom, setThisRoom] = useState('');
     const [currentUser, setCurrentUser] = useState(undefined);
     const [chatUser, setChatUser] = useState(undefined);
     const [allUsers, setAllUsers] = useState([]);
     const [isLogin, setIsLogin] = useState(false);
     const [chatLog, setChatLog] = useState([]);
+    const [room, setRoom] = useState('');
+    const [chat, setChat] = useState({});
+    const [receive, setReceive] = useState([]);
+
     const reduxState = useSelector(state => state.userInfo);
     const navigate = useNavigate();
+
+
+    useEffect(() => {
+        console.log(chatLog);
+        socket.on('receive_message', (data) => setChatLog([...chatLog, data]));
+    }, [chatLog]);
+
     
     useEffect(() => {
-        // console.log('hi');
-        // socket.emit('message', 'hello server', () => {
-        //     console.log('server is done!!!');
-        // });
         const {_id} = reduxState;
         if(_id === '') {
             navigate('/login');
@@ -36,6 +42,7 @@ const Main = () => {
             socket.emit('disconnection');
         };
     }, []);
+
 
     useEffect(() => {
         const getAllUsers = async () => {
@@ -50,18 +57,20 @@ const Main = () => {
         getAllUsers();
     }, [currentUser]);
 
+
     useEffect(() => {
         const getChatLogs = async () => {
             const messages = await axios.post(getChatLog, {
                 from: currentUser._id,
                 to: chatUser._id
             });
-            setChatLog(messages);
+            setChatLog(messages.data);
         };
         if(chatUser !== undefined) {
             getChatLogs();
         }
     }, [chatUser]);
+
 
     const handleChatUser = (chatUser) => {
         setChatUser(chatUser);
@@ -70,19 +79,26 @@ const Main = () => {
     const handleSendChat = async (msg) => {
         await axios.post(addChatLog, {
             message: msg,
-            from: currentUser,
-            to: chatUser
+            from: currentUser._id,
+            to: chatUser._id
         });
+
+        socket.emit('send_message', {
+            message: msg,
+            roomname: room,
+            from: currentUser._id,
+            to: chatUser._id
+        }, () => {setChatLog([...chatLog, {sender: currentUser._id, sendMessage: msg}])});
     };
 
     return (
         <main>
             {
-                isLogin && 
+                isLogin &&
                 <>
                     {chatUser && chatUser.username}
-                    <SideBar allUsers={allUsers} socket={socket} setRoom={setThisRoom} contacts={handleChatUser} />
-                    <ChatBoard sendChat={handleSendChat} currentUser={currentUser} socket={socket} roomName={thisRoom} />
+                    <SideBar setRoom={setRoom} currentUser={currentUser} allUsers={allUsers} socket={socket} contacts={handleChatUser} />
+                    <ChatBoard chat={chat} chatLog={chatLog} sendChat={handleSendChat} currentUser={currentUser} socket={socket} />
                 </>
             }
         </main>

@@ -43,33 +43,30 @@ const getPublicRoom = () => {
 };
 
 socketServer.on('connection', (socket) => {
-    socket['nickname'] = 'Anonymous';
-
     socket.onAny((e) => {
         console.log(`Socket Event : ${e}`);
     });
 
-    socket.on('message', (msg, done) => {
-        console.log(msg);
-        done();
-    });
+    // socket.on('send_message')
 
-    socket.on('join_room', (roomName, done) => {
+    // socket.on('message', (msg, done) => {
+    //     console.log(msg);
+    //     done();
+    // });
+
+    socket.on('join_room', (roomName) => {
         socket.join(roomName);
-        done(roomName);
-        socketServer.sockets.emit('roomLists', getPublicRoom());
     });
 
     socket.on('disconnecting', () => {
         console.log('disconnecting!!!');
     });
 
-    socket.on('set_nickname', nickname => {
-        socket['nickname'] = nickname;
-    });
-
-    socket.on('new_message', (msg, room, done) => {
-        socket.to(room).emit('send_message', `${socket.nickname} : ${msg}`);
+    socket.on('send_message', (data, done) => {
+        socket.to(data.room).emit('receive_message', {
+            sender: data.from,
+            sendMessage: data.message,
+        });
         done();
     });
 });

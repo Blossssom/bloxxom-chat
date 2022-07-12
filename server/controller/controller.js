@@ -103,18 +103,19 @@ module.exports.getChatLog = async (req, res, next) => {
                 $all: [from, to]
             }
         }).sort({updatedAt: 1});
-        console.log(from);
-        console.log(to);
-        console.log(message);
         // 1: 오름차순 , -1: 내림차순 정렬
-        const messageObj = message.map(msg => {
-            return {
-                myMessage: msg.sender.toString() === from,
-                sendMessage: msg.massege.text
-            };
-        });
-
-        res.json(messageObj);
+        if(message.length > 0) {
+            const messageObj = message.map(msg => {
+                return {
+                    sender: msg.sender,
+                    sendMessage: msg.message.text
+                };
+            });
+            return res.json(messageObj);
+        }else {
+            return res.json({msg: 'not yet chat!!!'});
+        }
+        
     }catch(err) {
         next(err);
     }
