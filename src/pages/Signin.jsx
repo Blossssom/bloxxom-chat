@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useState } from 'react';
 import styled from 'styled-components'
 import {ToastContainer, toast} from 'react-toastify';
@@ -6,19 +6,29 @@ import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
 import { signinRoute } from '../utils/ApiRouter';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 const Container = styled.div`
     
 `;
 
 export default function Signin() {
+    const reduxState = useSelector(state => state.userInfo);
+    const navigate = useNavigate();
+    
+    useEffect(() => {
+        const {_id} = reduxState;
+        if(_id !== '') {
+            console.log('check!');
+            navigate('/');
+        }
+    }, []);
+
     const [inputValues, setInputValues] = useState({
         username: '',
         nickname: '',
         password: ''
     });
-
-    const navigate = useNavigate();
 
     const toastOption = {
         position: 'bottom-right',

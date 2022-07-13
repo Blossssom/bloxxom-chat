@@ -41,7 +41,7 @@ module.exports.login = async (req, res, next) => {
         if(!userInfo) {
             return res.json({msg: 'ID를 확인해주세요!!!', status: false});
         }
-
+        
         const checkPassword = await bcrypt.compare(password, userInfo.password);
 
         if(!checkPassword) {

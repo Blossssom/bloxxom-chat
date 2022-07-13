@@ -16,7 +16,7 @@ const httpServer = http.createServer(app);
 const socketServer = new Server(httpServer, {
     cors : {
         origin :"*",
-        credentials :true
+        credential :true
     }
 });
 
@@ -31,31 +31,15 @@ mongoose.connect(process.env.MONGO_URL, {
 });
 // DB 연결 문자열 파싱허용, 통합 토폴로지 사용
 
-const getPublicRoom = () => {
-    const {sids, rooms} = socketServer.sockets.adapter;
-    const publicRooms = [];
-    rooms.forEach((v, key) => {
-        if(sids.get(key) === undefined) {
-            publicRooms.push({id: [...v][0], name: key});
-        }
-    });
-    return publicRooms;
-};
 
 socketServer.on('connection', (socket) => {
     socket.onAny((e) => {
         console.log(`Socket Event : ${e}`);
     });
 
-    // socket.on('send_message')
-
-    // socket.on('message', (msg, done) => {
-    //     console.log(msg);
-    //     done();
-    // });
-
     socket.on('join_room', (roomName) => {
         socket.join(roomName);
+        console.log(socketServer.sockets.adapter.rooms);
     });
 
     socket.on('disconnecting', () => {
@@ -63,7 +47,9 @@ socketServer.on('connection', (socket) => {
     });
 
     socket.on('send_message', (data, done) => {
-        socket.to(data.room).emit('receive_message', {
+        console.log(data.roomname);
+        console.log(socketServer.sockets.adapter.rooms);
+        socketServer.to(data.roomname).emit('receive_message', {
             sender: data.from,
             sendMessage: data.message,
         });

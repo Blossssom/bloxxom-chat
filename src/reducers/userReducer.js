@@ -10,7 +10,8 @@ const initState = {
             nickname: '',
             password: '',
             avatarSet: false,
-            avatarImage: ''
+            avatarImage: '',
+            isAdmin: false
         }
     
 };

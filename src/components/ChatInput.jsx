@@ -2,8 +2,33 @@ import React from 'react'
 import { useState } from 'react';
 import styled from 'styled-components'
 
-const Container = styled.div`
+const Container = styled.section`
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
 
+    form {
+        box-sizing: border-box;
+        width: 60%;
+        padding: 20px;
+        background-color: coral;
+        border-radius: 30px;
+        display: flex;
+        justify-content: space-between;
+
+        input {
+            border: none;
+            background-color: transparent;
+            width: 90%;
+            outline: none;
+            font-size: 1.1rem;
+        }
+
+        button {
+            border: none;
+            background-color: #c22180;
+        }
+    }
 `;
 
 export default function ChatInput({sendChat}) {

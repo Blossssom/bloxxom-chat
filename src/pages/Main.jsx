@@ -2,11 +2,21 @@ import ChatBoard from "../components/ChatBoard";
 import { io } from "socket.io-client";
 import { useEffect, useState } from "react";
 import SideBar from "../components/SideBar";
-import './Main.css';
 import { useSelector } from 'react-redux';
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { allUserRoute, addChatLog, getChatLog } from "../utils/ApiRouter";
+import styled from 'styled-components';
+
+
+// roomlist로 기존방에 emit 호출 막기
+// 로그아웃
+// disconnect 정리
+
+const Container = styled.article`
+    height: 100vh;
+    display: flex;
+`;
 
 const socket = io.connect('http://localhost:3012/');
 const Main = () => {
@@ -17,7 +27,7 @@ const Main = () => {
     const [chatLog, setChatLog] = useState([]);
     const [room, setRoom] = useState('');
     const [chat, setChat] = useState({});
-    const [receive, setReceive] = useState([]);
+    const [receive, setReceive] = useState();
 
     const reduxState = useSelector(state => state.userInfo);
     const navigate = useNavigate();
@@ -25,9 +35,13 @@ const Main = () => {
 
     useEffect(() => {
         console.log(chatLog);
-        socket.on('receive_message', (data) => setChatLog([...chatLog, data]));
-    }, [chatLog]);
+        socket.on('receive_message', (data) => setReceive(data));
+        console.log('end receive');
+    }, []);
 
+    useEffect(() => {
+        receive && setChatLog((prev) => [...prev, receive]);
+    }, [receive]);
     
     useEffect(() => {
         const {_id} = reduxState;
@@ -35,11 +49,11 @@ const Main = () => {
             navigate('/login');
         }else {
             setIsLogin(true);
+            // socket.on('receive_message', (data) => setReceive(data));
             setCurrentUser(reduxState);
         }
-
         return () => {
-            socket.emit('disconnection');
+            socket.disconnect();
         };
     }, []);
 
@@ -89,10 +103,14 @@ const Main = () => {
             from: currentUser._id,
             to: chatUser._id
         }, () => {setChatLog([...chatLog, {sender: currentUser._id, sendMessage: msg}])});
+
+        const msgs = [...chatLog];
+        msgs.push({from: currentUser._id, message: msg});
+        setChatLog(msgs);
     };
 
     return (
-        <main>
+        <Container>
             {
                 isLogin &&
                 <>
@@ -101,7 +119,7 @@ const Main = () => {
                     <ChatBoard chat={chat} chatLog={chatLog} sendChat={handleSendChat} currentUser={currentUser} socket={socket} />
                 </>
             }
-        </main>
+        </Container>
     );
 };
 

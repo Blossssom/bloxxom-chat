@@ -8,8 +8,77 @@ import { loginRoute } from "../utils/ApiRouter";
 import { useSelector, useDispatch } from "react-redux/es/exports";
 import { loginInfo } from '../actions/actions'
 
-const Container = styled.div`
-    
+const Container = styled.article`
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+
+    .login-formaria {
+        width: 50%;
+        flex-grow: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        section {
+            width: 70%;
+
+            div {
+                display: flex;
+                justify-content: center;
+            }
+
+            p {
+                margin-bottom: 30px;
+            }
+
+            form {
+                display: flex;
+                flex-direction: column;
+
+                input {
+                    border: none;
+                    background-color: #f9f8fd;
+                    border-radius: 30px;
+                    padding: 16px 24px;
+                    font-size: 0.9rem;
+                    outline: none;
+                    margin-bottom: 24px;
+
+                    &::placeholder {
+                        color: #cdcdcd;
+                        font-weight: bold;
+                    }
+
+                    &:last-of-type {
+                        margin-bottom: 80px;
+                    }
+                }
+
+                label {
+                    margin-bottom: 16px;
+                }
+
+                button {
+                    border: none;
+                    background-color: #c22180;
+                    color: white;
+                    font-size: 1.1rem;
+                    width: 200px;
+                    height: 50px;
+                    border-radius: 60px;
+                }
+            }   
+        }
+    }
+
+    .login-sideground {
+        width: 50%;
+        flex-grow: 1;
+        background-image: url('https://i.pinimg.com/564x/97/81/df/9781dfe541804b99ede55eaa36be0060.jpg');
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
 `;
 
 const Login = () => {
@@ -69,7 +138,6 @@ const Login = () => {
             }
 
             if(data.status) {
-                // console.log(data.userInfo);
                 dispatch(loginInfo(data.userInfo));
                 navigate('/');
             }
@@ -78,12 +146,24 @@ const Login = () => {
 
     return (
         <Container>
-            <h2>Login Page</h2>
-            <form onSubmit={(e) => handleSubmitAction(e)}>
-                <input onChange={(e) => handleInputChange(e)} type="text" name="username" />
-                <input onChange={(e) => handleInputChange(e)} type="password" name="password" />
-                <button type="submit">Log in</button>
-            </form>
+            <div className="login-sideground">
+            </div>
+            <div className="login-formaria">
+                <section>
+                    <h2>Login Page</h2>
+                    <p>Log in if you have an account in here</p>
+                    <form onSubmit={(e) => handleSubmitAction(e)}>
+                        <label htmlFor="login-id">Your id</label>
+                        <input id="login-id" placeholder="Enter your email" onChange={(e) => handleInputChange(e)} type="text" name="username" />
+                        <label htmlFor="login-pw">Password</label>
+                        <input id="login-pw" placeholder="Enter your password" onChange={(e) => handleInputChange(e)} type="password" name="password" />
+                        <div>
+                            <button type="submit">Log in</button>
+                        </div>
+                    </form>
+                </section>
+            </div>
+            
             <ToastContainer />
         </Container>
     );
