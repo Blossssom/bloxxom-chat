@@ -47,8 +47,8 @@ const SideBar = ({socket, contacts, allUsers, currentUser, setRoom}) => {
 
     
     return (
-        <Container className="side-bar">
-            <div className="side-bar__userlist">
+        <Container>
+            <div>
             {
                 allUsers.map((users, idx) => {
                     return (

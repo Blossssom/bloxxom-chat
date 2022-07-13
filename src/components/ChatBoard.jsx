@@ -7,18 +7,40 @@ import Chatroom from './Chatroom';
 import styled from 'styled-components';
 
 const Container = styled.article`
+    box-sizing: border-box;
     width: 70%;
     background-color: #f4f6ff;
     display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+    justify-content: center;
+    align-items: center;
 
-    div {
-        /* height: 90%; */
+    section {
+        width: 80%;
+        height: 100vh;
+        padding: 40px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+
+        .chat-board__users {
+            padding: 10px 0;
+            font-size: 1.1rem;
+        }
+
+        .chat-board__room {
+            width: 100%;
+            height: 90%;
+            /* margin-bottom: 20px; */
+        }
     }
+
+    
+
+    
 `;
 
-const ChatBoard = ({socket, roomName, currentUser, sendChat, chatLog, chat}) => {
+const ChatBoard = ({currentUser, sendChat, chatLog, chatUser, room}) => {
     
     const reduxState = useSelector(state => state.userInfo);
     const navigate = useNavigate();
@@ -30,16 +52,32 @@ const ChatBoard = ({socket, roomName, currentUser, sendChat, chatLog, chat}) => 
         }
     }, []);
 
-    
     return (
         <Container>
-            {currentUser.username}
-            <div>
-                <h2>{roomName}</h2>
-                <Chatroom socket={socket} chatLog={chatLog} chat={chat} />
-            </div>
-            
-            <ChatInput sendChat={sendChat} />
+            <section>
+                {
+                    room ?
+                    <>
+                        {
+                            chatUser && 
+                            <div className='chat-board__users'>
+                                {`${currentUser.nickname}, ${chatUser.nickname}`}
+                            </div>
+                        }
+                        
+                        <div className='chat-board__room'>
+                            <Chatroom currentUser={currentUser} chatLog={chatLog} />
+                        </div>
+                        
+                        <ChatInput sendChat={sendChat} />
+                    </> :
+                    <div>
+                        welcome!!!
+                    </div>
+                    
+                }
+                
+            </section>
         </Container>
     )
 };

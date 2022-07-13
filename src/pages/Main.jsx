@@ -13,7 +13,7 @@ import styled from 'styled-components';
 // 로그아웃
 // disconnect 정리
 
-const Container = styled.article`
+const Container = styled.main`
     height: 100vh;
     display: flex;
 `;
@@ -26,7 +26,6 @@ const Main = () => {
     const [isLogin, setIsLogin] = useState(false);
     const [chatLog, setChatLog] = useState([]);
     const [room, setRoom] = useState('');
-    const [chat, setChat] = useState({});
     const [receive, setReceive] = useState();
 
     const reduxState = useSelector(state => state.userInfo);
@@ -103,10 +102,6 @@ const Main = () => {
             from: currentUser._id,
             to: chatUser._id
         }, () => {setChatLog([...chatLog, {sender: currentUser._id, sendMessage: msg}])});
-
-        const msgs = [...chatLog];
-        msgs.push({from: currentUser._id, message: msg});
-        setChatLog(msgs);
     };
 
     return (
@@ -114,9 +109,8 @@ const Main = () => {
             {
                 isLogin &&
                 <>
-                    {chatUser && chatUser.username}
                     <SideBar setRoom={setRoom} currentUser={currentUser} allUsers={allUsers} socket={socket} contacts={handleChatUser} />
-                    <ChatBoard chat={chat} chatLog={chatLog} sendChat={handleSendChat} currentUser={currentUser} socket={socket} />
+                    <ChatBoard room={room} chatUser={chatUser} chatLog={chatLog} sendChat={handleSendChat} currentUser={currentUser} socket={socket} />
                 </>
             }
         </Container>

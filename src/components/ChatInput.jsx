@@ -2,20 +2,21 @@ import React from 'react'
 import { useState } from 'react';
 import styled from 'styled-components'
 
-const Container = styled.section`
+const Container = styled.div`
     display: flex;
     justify-content: center;
+    width: 100%;
     margin-bottom: 20px;
 
     form {
-        box-sizing: border-box;
-        width: 60%;
-        padding: 20px;
+        width: 100%;
+        flex-grow: 1;
+        padding: 8px 20px;
         background-color: coral;
         border-radius: 30px;
         display: flex;
         justify-content: space-between;
-
+        
         input {
             border: none;
             background-color: transparent;
@@ -27,6 +28,11 @@ const Container = styled.section`
         button {
             border: none;
             background-color: #c22180;
+            height: 40px;
+            width: 80px;
+            font-size: 1rem;
+            border-radius: 20px;
+            cursor: pointer;
         }
     }
 `;

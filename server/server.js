@@ -49,7 +49,7 @@ socketServer.on('connection', (socket) => {
     socket.on('send_message', (data, done) => {
         console.log(data.roomname);
         console.log(socketServer.sockets.adapter.rooms);
-        socketServer.to(data.roomname).emit('receive_message', {
+        socket.broadcast.to(data.roomname).emit('receive_message', {
             sender: data.from,
             sendMessage: data.message,
         });
