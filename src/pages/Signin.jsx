@@ -13,15 +13,15 @@ const Container = styled.div`
 `;
 
 export default function Signin() {
-    const reduxState = useSelector(state => state.userInfo);
+    // const reduxState = useSelector(state => state.userInfo);
     const navigate = useNavigate();
     
     useEffect(() => {
-        const {_id} = reduxState;
-        if(_id !== '') {
-            console.log('check!');
-            navigate('/');
-        }
+        // const {_id} = reduxState;
+        // if(_id !== '') {
+        //     console.log('check!');
+        //     navigate('/');
+        // }
     }, []);
 
     const [inputValues, setInputValues] = useState({
@@ -40,14 +40,15 @@ export default function Signin() {
 
     const handleValidationForm = () => {
         const {username, nickname, password} = inputValues;
+        console.log(username, nickname, password);
 
-        if(username < 4 || username > 12) {
+        if(username.length < 4 || username.length > 12) {
             toast.error('ID는 4 - 12 글자로 만들어주세요!!', toastOption);
             return false;
-        }else if(nickname === '' || nickname > 15) {
+        }else if(nickname === '' || nickname.length > 15) {
             toast.error('Nickname은 0 - 15 글자로 만들어주세요!!', toastOption);
             return false;
-        }else if(password < 6) {
+        }else if(password.length < 6) {
             toast.error('Password는 6 글자 이상으로 만들어주세요!!', toastOption);
             return false;
         }
@@ -67,6 +68,7 @@ export default function Signin() {
                 nickname,
                 password
             });
+            
             if(data.status === false) {
                 toast.error(data.msg, toastOption);
             }

@@ -18,8 +18,8 @@ const Container = styled.main`
     display: flex;
 `;
 
-const socket = io.connect('http://localhost:3012/');
 const Main = () => {
+    const socket = io.connect('http://localhost:3012/');
     const [currentUser, setCurrentUser] = useState(undefined);
     const [chatUser, setChatUser] = useState(undefined);
     const [allUsers, setAllUsers] = useState([]);

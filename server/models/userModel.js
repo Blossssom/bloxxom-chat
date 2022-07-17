@@ -30,6 +30,18 @@ const userSchema = new mongoose.Schema({
     isAdmin: {
         type: Boolean,
         default: false
+    },
+    token: {
+        type: String,
+        default: ''
+    },
+    tokenExp: {
+        type: Number,
+        defalut: 0
+    },
+    isLoginCheck: {
+        type: Boolean,
+        default: false
     }
 });
 

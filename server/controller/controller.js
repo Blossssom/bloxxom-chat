@@ -1,6 +1,7 @@
 const userSchema = require('../models/userModel');
 const chatSchema = require('../models/chatModel');
 const bcrypt = require('bcrypt');
+const {generateToken} = require('../controller/tokenContoroller');
 
 module.exports.signin = async (req, res, next) => {
     try {
@@ -35,8 +36,14 @@ module.exports.signin = async (req, res, next) => {
 
 module.exports.login = async (req, res, next) => {
     try {
-        const {username, password} = req.body;
+        const cookieOptions = {
+            httpOnly: true,
+            sameSite: 'none'
+        };
+        const {username, password, check} = req.body;
+        console.log(req.body)
         const userInfo = await userSchema.findOne({username});
+        
         
         if(!userInfo) {
             return res.json({msg: 'ID를 확인해주세요!!!', status: false});
@@ -49,7 +56,30 @@ module.exports.login = async (req, res, next) => {
         }
 
         delete userInfo.password;
+
+        // const makeToken = await generateToken(userInfo, check);
+        // res.cookie("access_token", makeToken, cookieOptions);
+        if(check) {
+            console.log(check);
+
+            await userInfo.updateOne({username: username}, {isLoginCheck: true});
+        }else {
+
+        }
+
+        // res.cookie("access_token", makeToken.accessToken, cookieOptions)
+
         return res.json({status: true, userInfo});
+    }catch(err) {
+        next(err);
+    }
+};
+
+
+module.exports.authLogin = async (req, res, next) => {
+    try {
+        
+
     }catch(err) {
         next(err);
     }

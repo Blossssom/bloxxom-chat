@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const serverRouter = require('./router/serverRouter');
 const app = express();
-require('dotenv').config({path: "./server/.env"});
+require('dotenv').config({path: "D:/frontend-projects/bloxxom-chat/server/.env"});
 
 app.use(cors());
 app.use(express.json());
@@ -56,7 +56,7 @@ socketServer.on('connection', (socket) => {
         done();
     });
 });
-
+console.log(process.env.PORT)
 httpServer.listen(process.env.PORT, () => {
     console.log(`server on!!! on ${process.env.PORT}`);
 });
