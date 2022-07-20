@@ -37,11 +37,11 @@ module.exports.signin = async (req, res, next) => {
 module.exports.login = async (req, res, next) => {
     try {
         const cookieOptions = {
+            domain: "localhost",
             httpOnly: true,
-            sameSite: 'none'
+            sameSite: 'none',
         };
         const {username, password, check} = req.body;
-        console.log(req.body)
         const userInfo = await userSchema.findOne({username});
         
         
@@ -57,21 +57,27 @@ module.exports.login = async (req, res, next) => {
 
         delete userInfo.password;
 
-        // const makeToken = await generateToken(userInfo, check);
-        // res.cookie("access_token", makeToken, cookieOptions);
-        if(check) {
-            console.log(check);
+        // if(check) {
+        //     try {
+        //         console.log('inner try')
+        //         const makeToken = await generateToken(userInfo, check);
+        //         await userSchema.findByIdAndUpdate(userInfo._id, {isLoginCheck: true, token: makeToken.accessToken}, {new: true});
+        //         res.cookie("access_token", makeToken.accessToken, cookieOptions);
+        //         cookieOptions.maxAge = 1000 * 60 * 60 * 24 * 7;
+        //         res.cookie("refresh_token", makeToken.refreshToken, cookieOptions);
+        //     }catch(err) {
+        //         console.log(err);
+        //     }
+        // }else { 
 
-            await userInfo.updateOne({username: username}, {isLoginCheck: true});
-        }else {
+        // }
 
-        }
 
         // res.cookie("access_token", makeToken.accessToken, cookieOptions)
 
         return res.json({status: true, userInfo});
     }catch(err) {
-        next(err);
+        console.log(err);
     }
 };
 

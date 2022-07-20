@@ -1,6 +1,15 @@
 import React, { useEffect } from 'react';
 import { useRef } from 'react';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
+
+const bubbleAnimation = keyframes`
+    from {
+      transform: scale(0);
+    }
+    to {
+      transform: scale(1);
+    }
+`;
 
 const Container = styled.div`
   /* background-color: antiquewhite; */
@@ -18,7 +27,8 @@ const Container = styled.div`
         border-radius: 1rem;
     }
   }
-  
+
+
   .chatroom-wrapper {
     padding: 20px 0px;
     display: flex;
@@ -28,8 +38,10 @@ const Container = styled.div`
     .speech-bubbles {
       display: flex;
       align-items: baseline;
+      /* transition: 0.5s ease-in-out; */
     }
 
+    
     .chatroom-img {
       width: 40px;
       height: 40px;
@@ -46,6 +58,7 @@ const Container = styled.div`
       }
 
       .chatroom-message {
+        animation: ${bubbleAnimation} 0.18s linear;
         position: relative;
         border-radius: 0.5rem 0 0.5rem 0.5rem;
         padding: 10px;
@@ -63,7 +76,6 @@ const Container = styled.div`
           border-bottom: 6px solid transparent;
           right: -10px;
           top: 0px;
-          
         }
       }
     }
@@ -76,6 +88,7 @@ const Container = styled.div`
       }
 
       .chatroom-message {
+        animation: ${bubbleAnimation} 0.18s linear;
         background-color: #7251f1;
         position: relative;
         border-radius: 0 0.5rem 0.5rem 0.5rem;

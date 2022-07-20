@@ -93,11 +93,11 @@ const Login = () => {
     const reduxState = useSelector(state => state.userInfo);
     
     useEffect(() => {
-        // const {_id} = reduxState;
-        // if(_id !== '') {
-        //     console.log('check!')
-        //     navigate('/');
-        // }
+        const {_id} = reduxState;
+        if(_id !== '') {
+            console.log('check!')
+            navigate('/');
+        }
     }, []);
 
     const toastOption = {
@@ -143,10 +143,10 @@ const Login = () => {
                 toast.error(data.msg, toastOption);
             }
 
-            // if(data.status) {
-            //     dispatch(loginInfo(data.userInfo));
-            //     navigate('/');
-            // }
+            if(data.status) {
+                dispatch(loginInfo(data.userInfo));
+                navigate('/');
+            }
         }
     };
 
@@ -163,8 +163,8 @@ const Login = () => {
                         <input id="login-id" placeholder="Enter your email" onChange={(e) => handleInputChange(e)} type="text" name="username" />
                         <label htmlFor="login-pw">Password</label>
                         <input id="login-pw" placeholder="Enter your password" onChange={(e) => handleInputChange(e)} type="password" name="password" />
-                        <label htmlFor="login-check">keep login?</label>
-                        <input id="login-check" type="checkbox" onChange={(e) => handleInputChange(e)} name="check" />
+                        {/* <label htmlFor="login-check">keep login?</label>
+                        <input id="login-check" type="checkbox" onChange={(e) => handleInputChange(e)} name="check" /> */}
                         <div>
                             <button type="submit">Log in</button>
                         </div>

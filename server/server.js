@@ -4,10 +4,15 @@ const {Server} = require('socket.io');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const serverRouter = require('./router/serverRouter');
+const cookieParser = require('cookie-parser');
 const app = express();
 require('dotenv').config({path: "D:/frontend-projects/bloxxom-chat/server/.env"});
 
-app.use(cors());
+app.use(cookieParser());
+app.use(cors({
+    origin: '*',
+    credentials :true
+}));
 app.use(express.json());
 app.use('/api/auth', serverRouter);
 app.get('/', (req, res) => res.send('connect httpServer').status(200));
@@ -15,8 +20,8 @@ app.get('/', (req, res) => res.send('connect httpServer').status(200));
 const httpServer = http.createServer(app);
 const socketServer = new Server(httpServer, {
     cors : {
-        origin :"*",
-        credential :true
+        origin: '*',
+        credentials :true
     }
 });
 
@@ -57,6 +62,7 @@ socketServer.on('connection', (socket) => {
     });
 });
 console.log(process.env.PORT)
+
 httpServer.listen(process.env.PORT, () => {
     console.log(`server on!!! on ${process.env.PORT}`);
 });
