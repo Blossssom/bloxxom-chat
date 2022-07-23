@@ -95,9 +95,10 @@ const Login = () => {
     useEffect(() => {
         const {_id} = reduxState;
         if(_id !== '') {
-            console.log('check!')
+            console.log('check!');
             navigate('/');
         }
+        console.log('render!!!');
     }, []);
 
     const toastOption = {
